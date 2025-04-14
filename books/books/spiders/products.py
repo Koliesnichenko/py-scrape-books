@@ -1,5 +1,6 @@
 import scrapy
 from scrapy.http import Response
+import re
 
 
 class ProductsSpider(scrapy.Spider):
@@ -37,11 +38,10 @@ class ProductsSpider(scrapy.Spider):
         stock_text = response.css("p.instock.availability::text").getall()
         clean_stock_text = " ".join(stock_text).strip()
 
-        import re
         amount = int(re.search(r"\d+", clean_stock_text).group())
 
         yield {
-            "title": response.css("h1::text").getall(),
+            "title": response.css("h1::text").get(),
             "price": float(
                 response.css(".price_color::text").get().replace("£", "")
             ),
